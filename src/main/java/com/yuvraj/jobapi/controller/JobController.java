@@ -1,11 +1,14 @@
 package com.yuvraj.jobapi.controller;
 import com.yuvraj.jobapi.model.Job;
 import com.yuvraj.jobapi.service.JobService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
 @RestController
+@RequestMapping("/jobs")
 public class JobController {
     private JobService service;
 
@@ -14,28 +17,45 @@ public class JobController {
         this.service = service;
     }
 
-    @GetMapping("/jobs")
-    public ArrayList<Job> getAllJobs() {
-        return service.getAllJobs();
+    @GetMapping
+    public ResponseEntity<ArrayList<Job>> getAllJobs() {
+        ArrayList<Job> job = service.getAllJobs();
+        return ResponseEntity.ok(job);
     }
 
-    @GetMapping("/jobs/{userid}")
-    public Job getJobsByUser(@PathVariable String userid) {
-        return service.getJobById(Integer.parseInt(userid));
+    @GetMapping("/{userid}")
+    public ResponseEntity<Job> getJobsByUserId(@PathVariable Integer userid) {
+        Job job = service.getJobById(userid);
+        if(job == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(job);
     }
 
-    @PostMapping("/jobs")
-    public void createJob(@RequestBody Job job) {
-        service.addJob(job);
+    @PostMapping
+    public ResponseEntity<Job> createJob(@RequestBody Job job) {
+        Job jobVar = service.addJob(job);
+        if(jobVar == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(jobVar);
     }
 
-    @DeleteMapping("/jobs/{userid}")
-    public void deleteJob(@PathVariable String userid) {
-        service.deleteJobById(Integer.parseInt(userid));
+    @DeleteMapping("/{userid}")
+    public ResponseEntity<Boolean> deleteJob(@PathVariable String userid) {
+        Boolean delId = service.deleteJobById(Integer.parseInt(userid));
+        if(delId == false){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PutMapping("/jobs")
-    public void updateJob(@RequestBody Job job) {
-        service.updateJob(job);
+    @PutMapping
+    public ResponseEntity<Boolean> updateJob(@RequestBody Job job) {
+         Boolean upDate = service.updateJob(job);
+        if(upDate == false){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(upDate);
     }
 }

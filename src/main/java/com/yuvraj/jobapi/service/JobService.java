@@ -17,8 +17,9 @@ public class JobService {
         }
 
         //addJob Method
-        public void addJob(Job job) {
+        public Job addJob(Job job) {
             jobs.add(job);
+            return job;
         }
         //getAllJobs Method
         public ArrayList<Job> getAllJobs(){
@@ -35,11 +36,11 @@ public class JobService {
             return null;
         }
         //deleteJobById Method
-        public void deleteJobById(int id){
-            jobs.removeIf(job -> id == job.getJobId());
+        public Boolean deleteJobById(int id){
+            return jobs.removeIf(job -> id == job.getJobId());
         }
         //updateJobById Method
-        public void updateJob(Job job){
+        public Boolean updateJob(Job job){
             for(Job job1 : jobs){
                 if(job.getJobId() == job1.getJobId()){
                     job1.setJobId(job.getJobId());
@@ -48,8 +49,10 @@ public class JobService {
                     job1.setCompanyAddress(job.getCompanyAddress());
                     job1.setCompanyName(job.getCompanyName());
                     job1.setSalary(job.getSalary());
+                    return true;
                 }
             }
+            return false;
         }
         //searchJobByName Method
         public Job searchJobByName(String name){
