@@ -4,8 +4,7 @@ import com.yuvraj.jobapi.service.JobService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/jobs")
@@ -18,14 +17,14 @@ public class JobController {
     }
 
     @GetMapping
-    public ResponseEntity<ArrayList<Job>> getAllJobs() {
-        ArrayList<Job> job = service.getAllJobs();
+    public ResponseEntity<List<Job>> getAllJobs() {
+        List<Job> job = service.getAllJobs();
         return ResponseEntity.ok(job);
     }
 
     @GetMapping("/{userid}")
     public ResponseEntity<Job> getJobsByUserId(@PathVariable Integer userid) {
-        Job job = service.getJobById(userid);
+        Job job = service.findById(userid);
         if(job == null){
             return ResponseEntity.notFound().build();
         }

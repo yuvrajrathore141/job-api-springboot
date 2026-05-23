@@ -1,22 +1,24 @@
 package com.yuvraj.jobapi.model;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
+
+@Entity
 public class Job {
 
+        @Id
+        @GeneratedValue(strategy=GenerationType.IDENTITY)
         private int jobId;
+
         private String jobTitle;
         private String jobDescription;
         private double salary;
         private String companyName;
         private String companyAddress;
 
-        public Job(Integer jobId, String jobtitle, String jobDescription, double salary, String companyName, String companyAddress) {
-            this.jobId = jobId;
-            this.jobTitle = jobTitle;
-            this.jobDescription = jobDescription;
-            this.salary = salary;
-            this.companyName = companyName;
-            this.companyAddress = companyAddress;
-        }
+
 
         public Job() {}
 

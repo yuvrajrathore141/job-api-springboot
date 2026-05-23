@@ -1,66 +1,50 @@
 package com.yuvraj.jobapi.service;
 import com.yuvraj.jobapi.model.Job;
+import com.yuvraj.jobapi.repository.JobRepository;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
 public class JobService {
-        //ArrayList for object Storage
-        ArrayList<Job> jobs = new ArrayList<Job>();
 
-        //DemoData using constructor
-        public JobService() {
-            jobs.add(new Job(1, "Java Developer", "Backend Developer", 50000, "Techcorp", "Delhi"));
-            jobs.add(new Job(2, "Frontend Developer", "React Development", 45000, "WebSolutions", "Mumbai"));
-            jobs.add(new Job(3, "Full Stack Developer", "Frontend + Backend", 70000, "CodeBase", "Bangalore"));
+        private JobRepository jobRepository;
+        public JobService(JobRepository jobRepository) {this.jobRepository = jobRepository;}
+
+        //getAllJobs
+        public List<Job> getAllJobs() {
+            return (List<Job>) jobRepository.findAll();
         }
 
-        //addJob Method
+        //addJob
         public Job addJob(Job job) {
-            jobs.add(job);
-            return job;
+            return jobRepository.save(job);
         }
-        //getAllJobs Method
-        public ArrayList<Job> getAllJobs(){
-            return jobs;
-        }
-        //getJobById Method
-        public Job getJobById(int id){
-            for(Job job : jobs){
-                if(id == job.getJobId()){
-                    return job;
-                }
 
-            }
-            return null;
+        //findById
+        public Job findById(Integer id) {
+            return jobRepository.findById(id).orElse(null);
         }
+
+
         //deleteJobById Method
         public Boolean deleteJobById(int id){
-            return jobs.removeIf(job -> id == job.getJobId());
+            if(jobRepository.existsById(id)){
+                jobRepository.deleteById(id);
+                return true;
+            }
+            return false;
         }
         //updateJobById Method
         public Boolean updateJob(Job job){
-            for(Job job1 : jobs){
-                if(job.getJobId() == job1.getJobId()){
-                    job1.setJobId(job.getJobId());
-                    job1.setJobTitle(job.getJobTitle());
-                    job1.setJobDescription(job.getJobDescription());
-                    job1.setCompanyAddress(job.getCompanyAddress());
-                    job1.setCompanyName(job.getCompanyName());
-                    job1.setSalary(job.getSalary());
-                    return true;
-                }
+            if(jobRepository.existsById(job.getJobId())){
+                jobRepository.save(job);
+                return true;
             }
             return false;
         }
         //searchJobByName Method
         public Job searchJobByName(String name){
-            for(Job job : jobs){
-                if(job.getJobTitle().equals(name)){
-                    return job;
-                }
-            }
-            return null;
+            return jobRepository.findByJobTitle(name);
         }
 }
