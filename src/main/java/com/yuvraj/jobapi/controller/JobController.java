@@ -1,4 +1,5 @@
 package com.yuvraj.jobapi.controller;
+import com.yuvraj.jobapi.dto.CreateJobRequest;
 import com.yuvraj.jobapi.model.Job;
 import com.yuvraj.jobapi.service.JobService;
 import org.springframework.http.HttpStatus;
@@ -32,8 +33,8 @@ public class JobController {
     }
 
     @PostMapping
-    public ResponseEntity<Job> createJob(@RequestBody Job job) {
-        Job jobVar = service.addJob(job);
+    public ResponseEntity<Job> createJob(@RequestBody CreateJobRequest createJobRequest) {
+        Job jobVar = service.addJob(createJobRequest);
         if(jobVar == null){
             return ResponseEntity.notFound().build();
         }

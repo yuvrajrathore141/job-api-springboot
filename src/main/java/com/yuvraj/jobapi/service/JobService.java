@@ -1,4 +1,5 @@
 package com.yuvraj.jobapi.service;
+import com.yuvraj.jobapi.dto.CreateJobRequest;
 import com.yuvraj.jobapi.model.Job;
 import com.yuvraj.jobapi.repository.JobRepository;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,13 @@ public class JobService {
         }
 
         //addJob
-        public Job addJob(Job job) {
+        public Job addJob(CreateJobRequest createJobRequest) {
+            Job job = new Job();
+            job.setJobTitle(createJobRequest.getJobTitle());
+            job.setJobDescription(createJobRequest.getJobDescription());
+            job.setSalary(createJobRequest.getSalary());
+            job.setCompanyName(createJobRequest.getCompanyName());
+            job.setCompanyAddress(createJobRequest.getCompanyAddress());
             return jobRepository.save(job);
         }
 

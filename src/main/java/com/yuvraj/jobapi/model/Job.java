@@ -14,7 +14,7 @@ public class Job {
 
         private String jobTitle;
         private String jobDescription;
-        private double salary;
+        private Double salary;
         private String companyName;
         private String companyAddress;
 
@@ -35,7 +35,7 @@ public class Job {
         public String getJobDescription() {
             return jobDescription;
         }
-        public double getSalary() {
+        public Double getSalary() {
             return salary;
         }
         public String getCompanyName() {
