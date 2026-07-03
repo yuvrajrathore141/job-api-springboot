@@ -1,15 +1,17 @@
 package com.yuvraj.jobapi.dto;
 
-public class CreateJobRequest {
+public class UpDateJobRequest {
+    private int jobId;
     private String jobTitle;
     private String jobDescription;
     private Double salary;
     private String companyName;
     private String companyAddress;
 
-    public CreateJobRequest(){}
+    public UpDateJobRequest(){}
 
     //GetJobValue
+    public int getJobId() {return jobId;}
     public String getJobTitle() {
         return jobTitle;
     }
@@ -25,7 +27,4 @@ public class CreateJobRequest {
     public String getCompanyAddress() {
         return companyAddress;
     }
-
-
-
 }

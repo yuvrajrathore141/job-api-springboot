@@ -1,5 +1,8 @@
 package com.yuvraj.jobapi.controller;
+import com.yuvraj.jobapi.dto.AllJobResponse;
 import com.yuvraj.jobapi.dto.CreateJobRequest;
+import com.yuvraj.jobapi.dto.JobDetailResponse;
+import com.yuvraj.jobapi.dto.UpDateJobRequest;
 import com.yuvraj.jobapi.model.Job;
 import com.yuvraj.jobapi.service.JobService;
 import org.springframework.http.HttpStatus;
@@ -18,14 +21,14 @@ public class JobController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Job>> getAllJobs() {
-        List<Job> job = service.getAllJobs();
+    public ResponseEntity<List<AllJobResponse>> getAllJobs() {
+        List<AllJobResponse> job = service.getAllJobs();
         return ResponseEntity.ok(job);
     }
 
     @GetMapping("/{userid}")
-    public ResponseEntity<Job> getJobsByUserId(@PathVariable Integer userid) {
-        Job job = service.findById(userid);
+    public ResponseEntity<JobDetailResponse> getJobsByUserId(@PathVariable Integer userid) {
+        JobDetailResponse job = service.findById(userid);
         if(job == null){
             return ResponseEntity.notFound().build();
         }
@@ -33,8 +36,8 @@ public class JobController {
     }
 
     @PostMapping
-    public ResponseEntity<Job> createJob(@RequestBody CreateJobRequest createJobRequest) {
-        Job jobVar = service.addJob(createJobRequest);
+    public ResponseEntity<JobDetailResponse> createJob(@RequestBody CreateJobRequest createJobRequest) {
+        JobDetailResponse jobVar = service.addJob(createJobRequest);
         if(jobVar == null){
             return ResponseEntity.notFound().build();
         }
@@ -51,8 +54,8 @@ public class JobController {
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> updateJob(@RequestBody Job job) {
-         Boolean upDate = service.updateJob(job);
+    public ResponseEntity<Boolean> updateJob(@RequestBody UpDateJobRequest upDateJobRequest) {
+         Boolean upDate = service.updateJob(upDateJobRequest);
         if(upDate == false){
             return ResponseEntity.notFound().build();
         }
