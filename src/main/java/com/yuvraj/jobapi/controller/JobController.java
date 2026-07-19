@@ -5,6 +5,7 @@ import com.yuvraj.jobapi.dto.JobDetailResponse;
 import com.yuvraj.jobapi.dto.UpDateJobRequest;
 import com.yuvraj.jobapi.model.Job;
 import com.yuvraj.jobapi.service.JobService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class JobController {
     }
 
     @PostMapping
-    public ResponseEntity<JobDetailResponse> createJob(@RequestBody CreateJobRequest createJobRequest) {
+    public ResponseEntity<JobDetailResponse> createJob(@Valid @RequestBody CreateJobRequest createJobRequest) {
         JobDetailResponse jobVar = service.addJob(createJobRequest);
         if(jobVar == null){
             return ResponseEntity.notFound().build();
@@ -44,9 +45,9 @@ public class JobController {
         return ResponseEntity.status(HttpStatus.CREATED).body(jobVar);
     }
 
-    @DeleteMapping("/{userid}")
-    public ResponseEntity<Boolean> deleteJob(@PathVariable String userid) {
-        Boolean delId = service.deleteJobById(Integer.parseInt(userid));
+    @DeleteMapping("/{jobid}")
+    public ResponseEntity<Boolean> deleteJob(@PathVariable String jobid) {
+        Boolean delId = service.deleteJobById(Integer.parseInt(jobid));
         if(delId == false){
             return ResponseEntity.notFound().build();
         }
@@ -54,7 +55,7 @@ public class JobController {
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> updateJob(@RequestBody UpDateJobRequest upDateJobRequest) {
+    public ResponseEntity<Boolean> updateJob(@Valid @RequestBody UpDateJobRequest upDateJobRequest) {
          Boolean upDate = service.updateJob(upDateJobRequest);
         if(upDate == false){
             return ResponseEntity.notFound().build();
