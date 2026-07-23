@@ -3,12 +3,14 @@ import com.yuvraj.jobapi.dto.AllJobResponse;
 import com.yuvraj.jobapi.dto.CreateJobRequest;
 import com.yuvraj.jobapi.dto.JobDetailResponse;
 import com.yuvraj.jobapi.dto.UpDateJobRequest;
+import com.yuvraj.jobapi.exception.JobNotFoundException;
 import com.yuvraj.jobapi.model.Job;
 import com.yuvraj.jobapi.repository.JobRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -73,26 +75,30 @@ public class JobService {
 
         //findById
         public JobDetailResponse findById(Integer id) {
-            return tojobDetailResponse(jobRepository.findById(id).orElse(null));
+            Optional<Job> optionalJob = jobRepository.findById(id);
+            Job job = optionalJob.orElseThrow(
+                    () -> new JobNotFoundException("Job not found with id " + id)
+            );
+            return tojobDetailResponse(job);
         }
 
 
         //deleteJobById Method
         public Boolean deleteJobById(int id){
-            if(jobRepository.existsById(id)){
-                jobRepository.deleteById(id);
-                return true;
-            }
-            return false;
+            jobRepository.findById(id).orElseThrow(
+                    () -> new JobNotFoundException("Job not found with id " + id)
+            );
+            jobRepository.deleteById(id);
+                    return true;
         }
         //updateJobById Method
         public Boolean updateJob(UpDateJobRequest  upDateJobRequest) {
             Job job = toupdateJob(upDateJobRequest);
-            if(jobRepository.existsById(job.getJobId())){
-                jobRepository.save(job);
-                return true;
-            }
-            return false;
+            jobRepository.findById(job.getJobId()).orElseThrow(
+                    () -> new JobNotFoundException("Job not found with id " + job.getJobId())
+            );
+            jobRepository.save(job);
+            return true;
         }
         //searchJobByName Method
         public Job searchJobByName(String name){
