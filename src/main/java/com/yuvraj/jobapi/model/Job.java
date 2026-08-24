@@ -11,19 +11,13 @@ public class Job {
         @Id
         @GeneratedValue(strategy=GenerationType.IDENTITY)
         private int jobId;
-
         private String jobTitle;
         private String jobDescription;
         private Double salary;
         private String companyName;
         private String companyAddress;
 
-
-
         public Job() {}
-
-
-
 
         //GetJobValue
         public int getJobId() {

@@ -7,9 +7,8 @@ import com.yuvraj.jobapi.exception.JobNotFoundException;
 import com.yuvraj.jobapi.model.Job;
 import com.yuvraj.jobapi.repository.JobRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 
@@ -20,13 +19,8 @@ public class JobService {
         public JobService(JobRepository jobRepository) {this.jobRepository = jobRepository;}
 
         //getAllJobs
-        public List<AllJobResponse> getAllJobs() {
-            List<AllJobResponse> jobs = new ArrayList<>();
-            List<Job> jobList = jobRepository.findAll();
-            for (Job job : jobList) {
-                jobs.add(toGetAllJobs(job));
-            }
-            return jobs;
+        public Page<AllJobResponse> getAllJobs(Pageable pageable) {
+            return jobRepository.findAll(pageable).map(this::toGetAllJobs);
         }
         public AllJobResponse toGetAllJobs(Job job) {
             AllJobResponse jobResponse = new AllJobResponse();

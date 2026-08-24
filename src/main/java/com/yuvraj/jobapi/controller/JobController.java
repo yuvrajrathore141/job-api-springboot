@@ -3,13 +3,14 @@ import com.yuvraj.jobapi.dto.AllJobResponse;
 import com.yuvraj.jobapi.dto.CreateJobRequest;
 import com.yuvraj.jobapi.dto.JobDetailResponse;
 import com.yuvraj.jobapi.dto.UpDateJobRequest;
-import com.yuvraj.jobapi.model.Job;
 import com.yuvraj.jobapi.service.JobService;
 import jakarta.validation.Valid;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/jobs")
@@ -21,10 +22,11 @@ public class JobController {
         this.service = service;
     }
 
+
     @GetMapping
-    public ResponseEntity<List<AllJobResponse>> getAllJobs() {
-        List<AllJobResponse> job = service.getAllJobs();
-        return ResponseEntity.ok(job);
+    public ResponseEntity<Page<AllJobResponse>> getAllJobs(
+            @PageableDefault(page = 0, size = 3) Pageable pageable) {
+        return ResponseEntity.ok(service.getAllJobs(pageable));
     }
 
     @GetMapping("/{userid}")

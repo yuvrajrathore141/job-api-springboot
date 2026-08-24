@@ -1,7 +1,5 @@
 package com.yuvraj.jobapi.dto;
 
-import com.yuvraj.jobapi.model.Job;
-
 public class AllJobResponse {
     private int jobId;
     private String jobTitle;
