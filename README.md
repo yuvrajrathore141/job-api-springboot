@@ -6,24 +6,27 @@ A RESTful Job Management API built using **Spring Boot**, **Spring Data JPA**, a
 
 ## Tech Stack
 
-- Java 21
+- Java 17
 - Spring Boot
 - Spring Web
 - Spring Data JPA
 - Hibernate
 - MySQL
 - Maven
+- Jakarta Bean Validation
 
 ---
 
 ## Features
 
 - Create a Job
-- Get all Jobs
+- Get all Jobs (with pagination)
 - Get Job by ID
 - Update Job
 - Delete Job
-- Search Job by Title
+- Search Job by Title *(service layer ready, REST endpoint in progress)*
+- Request validation on Create/Update
+- Centralized exception handling with structured error responses
 
 ---
 
@@ -33,6 +36,7 @@ A RESTful Job Management API built using **Spring Boot**, **Spring Data JPA**, a
 src
 ├── controller
 ├── dto
+├── exception
 ├── model
 ├── repository
 ├── service
@@ -50,7 +54,7 @@ Client
 Controller
    │
    ▼
-Request DTO
+Request DTO (validated)
    │
    ▼
 Service
@@ -72,6 +76,9 @@ Response DTO
    │
    ▼
 Client
+
+Errors at any layer are caught by a Global Exception Handler
+and returned as a structured ErrorResponse.
 ```
 
 ---
@@ -80,15 +87,34 @@ Client
 
 ### Request DTOs
 
-- CreateJobRequest
-- UpdateJobRequest
+- `CreateJobRequest` — validated with `@NotBlank`, `@NotNull`, `@Positive`
+- `UpDateJobRequest` — validated with `@NotBlank`, `@NotNull`, `@Positive`
 
 ### Response DTOs
 
-- AllJobResponse
-- JobDetailResponse
+- `AllJobResponse` — lightweight summary (id, title, company, salary)
+- `JobDetailResponse` — full job detail
 
 The API communicates only through DTOs while entities remain internal to the application.
+
+---
+
+## Exception Handling
+
+- `JobNotFoundException` — thrown when a job ID doesn't exist (get/update/delete)
+- `GlobalExceptionHandler` — `@ControllerAdvice` that maps exceptions to proper HTTP status codes
+- `ErrorResponse` — consistent JSON error shape: `message`, `status`, `timestamp`
+
+---
+
+## Pagination
+
+`GET /jobs` now accepts standard `Pageable` query params (`page`, `size`, `sort`), defaulting to page `0` with a size of `3`.
+
+Example:
+```
+GET /jobs?page=0&size=5&sort=jobTitle,asc
+```
 
 ---
 
@@ -96,12 +122,11 @@ The API communicates only through DTOs while entities remain internal to the app
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
-| GET | `/jobs` | Get all jobs |
+| GET | `/jobs` | Get all jobs (paginated) |
 | GET | `/jobs/{id}` | Get job by ID |
-| POST | `/jobs` | Create new job |
-| PUT | `/jobs` | Update job |
+| POST | `/jobs` | Create new job (validated) |
+| PUT | `/jobs` | Update job (validated) |
 | DELETE | `/jobs/{id}` | Delete job |
-| GET | `/jobs/search/{title}` | Search job by title |
 
 ---
 
@@ -119,6 +144,9 @@ The API communicates only through DTOs while entities remain internal to the app
 - Repository Pattern
 - ResponseEntity
 - MySQL Integration
+- Bean Validation
+- Global Exception Handling
+- Pagination & Sorting
 
 ---
 
@@ -133,14 +161,14 @@ This project was developed incrementally:
 - Hibernate
 - MySQL
 - DTO Pattern
+- Validation
+- Global Exception Handling
+- Pagination & Sorting
 
 Upcoming improvements:
 
-- Validation
-- Global Exception Handling
 - Entity Relationships
 - Spring Security + JWT Authentication
-- Pagination & Sorting
 - Docker
 - Deployment
 
