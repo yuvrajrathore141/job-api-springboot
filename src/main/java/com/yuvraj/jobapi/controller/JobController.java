@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/jobs")
 public class JobController {
@@ -63,5 +66,10 @@ public class JobController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(upDate);
+    }
+
+    @GetMapping("/search")
+    public List<AllJobResponse> getJobByTitle(@RequestParam("title") String jobTitle){
+        return service.searchJobByName(jobTitle);
     }
 }

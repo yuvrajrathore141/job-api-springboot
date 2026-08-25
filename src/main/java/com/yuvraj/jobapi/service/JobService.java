@@ -9,6 +9,8 @@ import com.yuvraj.jobapi.repository.JobRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 import java.util.Optional;
 
 
@@ -95,7 +97,7 @@ public class JobService {
             return true;
         }
         //searchJobByName Method
-        public Job searchJobByName(String name){
-            return jobRepository.findByJobTitle(name);
+        public List<AllJobResponse> searchJobByName(String name){
+            return jobRepository.findByJobTitleContainingIgnoreCase(name).stream().map(this::toGetAllJobs).toList();
         }
 }
