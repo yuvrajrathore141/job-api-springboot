@@ -69,7 +69,7 @@ public class JobController {
     }
 
     @GetMapping("/search")
-    public List<AllJobResponse> getJobByTitle(@RequestParam("title") String jobTitle){
-        return service.searchJobByName(jobTitle);
+    public Page<AllJobResponse> getJobByTitle(@RequestParam("title") String jobTitle, @PageableDefault(page= 0, size= 3) Pageable pageable) {
+        return service.searchJobByName(jobTitle, pageable);
     }
 }

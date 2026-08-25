@@ -97,7 +97,7 @@ public class JobService {
             return true;
         }
         //searchJobByName Method
-        public List<AllJobResponse> searchJobByName(String name){
-            return jobRepository.findByJobTitleContainingIgnoreCase(name).stream().map(this::toGetAllJobs).toList();
+        public Page<AllJobResponse> searchJobByName(String name, Pageable pageable) {
+            return jobRepository.findByJobTitleContainingIgnoreCase(name, pageable).map(this::toGetAllJobs);
         }
 }
