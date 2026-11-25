@@ -6,15 +6,13 @@ import com.yuvraj.jobapi.dto.UpDateJobRequest;
 import com.yuvraj.jobapi.service.JobService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/jobs")
@@ -29,9 +27,18 @@ public class JobController {
 
     @GetMapping
     public ResponseEntity<Page<AllJobResponse>> getAllJobs(
-            @RequestParam(required = false, defaultValue = "1") int PageNumber, @RequestParam(required = false, defaultValue = "5") int PageSize) {
+            @RequestParam(required = false, defaultValue = "1") int PageNumber,
+            @RequestParam(required = false, defaultValue = "5") int PageSize,
+            @RequestParam(required = false, defaultValue = "jobId") String sortBy,
+            @RequestParam(required = false, defaultValue = "ASC") String sortDir) {
+        Sort sort = null;
+        if(sortDir.equalsIgnoreCase("ASC")){
+            sort = Sort.by(sortBy).ascending();
+        }else{
+            sort = Sort.by(sortBy).descending();
+        }
 
-        return ResponseEntity.ok(service.getAllJobs(PageRequest.of(PageNumber-1, PageSize)));
+        return ResponseEntity.ok(service.getAllJobs(PageRequest.of(PageNumber-1, PageSize, sort)));
     }
 
     @GetMapping("/{userid}")
@@ -70,8 +77,5 @@ public class JobController {
         return ResponseEntity.ok().body(upDate);
     }
 
-    @GetMapping("/search")
-    public Page<AllJobResponse> getJobByTitle(@RequestParam("title") String jobTitle, @PageableDefault(page= 0, size= 3) Pageable pageable) {
-        return service.searchJobByName(jobTitle, pageable);
-    }
+
 }
