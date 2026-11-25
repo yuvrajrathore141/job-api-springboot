@@ -5,6 +5,7 @@ import com.yuvraj.jobapi.dto.JobDetailResponse;
 import com.yuvraj.jobapi.dto.UpDateJobRequest;
 import com.yuvraj.jobapi.service.JobService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +29,9 @@ public class JobController {
 
     @GetMapping
     public ResponseEntity<Page<AllJobResponse>> getAllJobs(
-            @PageableDefault(page = 0, size = 3) Pageable pageable) {
-        return ResponseEntity.ok(service.getAllJobs(pageable));
+            @RequestParam(required = false, defaultValue = "1") int PageNumber, @RequestParam(required = false, defaultValue = "5") int PageSize) {
+
+        return ResponseEntity.ok(service.getAllJobs(PageRequest.of(PageNumber-1, PageSize)));
     }
 
     @GetMapping("/{userid}")
