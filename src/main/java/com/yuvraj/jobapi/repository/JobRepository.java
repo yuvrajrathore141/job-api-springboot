@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JobRepository extends JpaRepository<Job, Integer> {
-    Page<Job> findByJobTitleContainingIgnoreCase(String jobTitle, Pageable pageable);
+    Page<Job> findByCompanyName(String companyName, Pageable pageable);
 }

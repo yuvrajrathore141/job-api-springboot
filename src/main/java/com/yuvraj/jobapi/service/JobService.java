@@ -19,8 +19,13 @@ public class JobService {
         public JobService(JobRepository jobRepository) {this.jobRepository = jobRepository;}
 
         //getAllJobs
-        public Page<AllJobResponse> getAllJobs(Pageable pageable) {
-            return jobRepository.findAll(pageable).map(this::toGetAllJobs);
+        public Page<AllJobResponse> getAllJobs(Pageable pageable, String search) {
+            if(search == null) {
+                return jobRepository.findAll(pageable).map(this::toGetAllJobs);
+            }else{
+                return jobRepository.findByCompanyName(search , pageable).map(this::toGetAllJobs);
+            }
+
         }
         public AllJobResponse toGetAllJobs(Job job) {
             AllJobResponse jobResponse = new AllJobResponse();
@@ -94,8 +99,5 @@ public class JobService {
             jobRepository.save(job);
             return true;
         }
-        //searchJobByName Method
-        public Page<AllJobResponse> searchJobByName(String name, Pageable pageable) {
-            return jobRepository.findByJobTitleContainingIgnoreCase(name, pageable).map(this::toGetAllJobs);
-        }
+
 }

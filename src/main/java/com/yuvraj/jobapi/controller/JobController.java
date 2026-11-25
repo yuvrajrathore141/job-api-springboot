@@ -30,7 +30,8 @@ public class JobController {
             @RequestParam(required = false, defaultValue = "1") int PageNumber,
             @RequestParam(required = false, defaultValue = "5") int PageSize,
             @RequestParam(required = false, defaultValue = "jobId") String sortBy,
-            @RequestParam(required = false, defaultValue = "ASC") String sortDir) {
+            @RequestParam(required = false, defaultValue = "ASC") String sortDir,
+            @RequestParam(required = false) String search){
         Sort sort = null;
         if(sortDir.equalsIgnoreCase("ASC")){
             sort = Sort.by(sortBy).ascending();
@@ -38,7 +39,7 @@ public class JobController {
             sort = Sort.by(sortBy).descending();
         }
 
-        return ResponseEntity.ok(service.getAllJobs(PageRequest.of(PageNumber-1, PageSize, sort)));
+        return ResponseEntity.ok(service.getAllJobs(PageRequest.of(PageNumber-1, PageSize, sort), search));
     }
 
     @GetMapping("/{userid}")
